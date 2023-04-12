@@ -5,5 +5,23 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-
+    let narr = arr;
+    narr.sort(function(a, b) {
+        if (a.localeCompare(b) > 0) {
+            if (a.toLowerCase() === b.toLowerCase()) {
+            return -1
+            } else {
+            return a.localeCompare(b) 
+            }
+        } else {
+            return a.localeCompare(b);
+        }
+    });
+if (param === 'asc') {
+    
+    return narr;
+} else {
+    narr.reverse();
+    return narr;
+}
 }
