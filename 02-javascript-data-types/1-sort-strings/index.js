@@ -5,7 +5,7 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-    let narr = arr;
+    let narr = arr.slice(0);
     narr.sort(function(a, b) {
         if (a.localeCompare(b) > 0) {
             if (a.toLowerCase() === b.toLowerCase()) {
