@@ -5,23 +5,15 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-    let narr = arr.slice(0);
-    narr.sort(function(a, b) {
-        if (a.localeCompare(b) > 0) {
-            if (a.toLowerCase() === b.toLowerCase()) {
-            return -1
-            } else {
-            return a.localeCompare(b); 
-            }
-        } else {
-            return a.localeCompare(b);
-        }
-    });
-if (param === 'asc') {
+    let narr = [...arr];
     
-    return narr;
-} else {
-    narr.reverse();
-    return narr;
-}
+if (param === 'asc') {
+    return narr.sort((a,b) => {
+        return a.localeCompare(b, ["ru", "en"], {caseFirst: "upper"})
+    });
+} else if (param === 'desc') {
+    return narr.sort((a,b) => {
+        return -1 * a.localeCompare(b, ["ru", "en"], {caseFirst: "upper"})
+});
+  }
 }
