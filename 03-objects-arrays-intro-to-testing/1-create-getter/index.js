@@ -17,6 +17,7 @@ export function createGetter(path) {
     result = result[item];
     }
  return result;
+ 
  }
  
 }
