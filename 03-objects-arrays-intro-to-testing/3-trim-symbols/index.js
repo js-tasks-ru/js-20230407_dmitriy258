@@ -19,7 +19,7 @@ export function trimSymbols(string, size) {
             } 
         } else {
             count = 1;
-            result.puch(check);
+            result.push(check);
         }
     }
 
