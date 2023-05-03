@@ -4,7 +4,10 @@ export default class SortableTable {
   isSortLocally;
   defaultField;
   defaultOrder;
-    constructor(headerConfig = [], {data = [], sorted = {}} = {}, isSortLocally = 'true', defaultField = 'title', defaultOrder = 'asc') {
+    constructor(headerConfig = [], {data = [], sorted = {
+      id: headerConfig.find(item => item.sortable).id,
+      order: 'asc'
+    }} = {}, isSortLocally = 'true', defaultField = 'title', defaultOrder = 'asc') {
       this.headerConfig = headerConfig;
       this.data = data;
       this.isSortLocally = isSortLocally;
@@ -12,8 +15,8 @@ export default class SortableTable {
       this.defaultOrder = defaultOrder;
       this.sorted = sorted;
       this.render();
-      this.setEventListener();
-      this.sort(defaultField,defaultOrder);
+      
+      //this.sort(defaultField,defaultOrder);
     }
   
     render() {
@@ -22,9 +25,36 @@ export default class SortableTable {
   
       this.element = wrapper.firstElementChild;
       this.subElement = this.getSubElement(this.element);
-  
+      this.setEventListener();
     }
   
+    onSortClick = event => {
+      const column = event.target.closest('[data-sortable="true"]');
+
+      const orderChange = order => {
+        const orders = {
+          asc : "desc",
+          desc : "asc",
+        };
+        return orders[order];
+      };
+
+      if (column) {
+        const {id , order} = column.dataset;
+        const newOrder = orderChange(order);
+        const sortedData = this.sortData(id , newOrder);
+
+        const arrow = column.querySelector('.sortable-table__sort-arrow');
+
+        column.dataset.order = newOrder;
+
+        if (!arrow) {
+          column.append(this.subElement.arrow);
+        }
+        this.subElement.body.innerHTML = this.getTableRows(sortedData);
+      }
+    }
+
     sort(field, order) {
       if (this.isSortLocally) {
         this.sortOnClient(field, order);
@@ -54,25 +84,8 @@ export default class SortableTable {
     this.sortOnClient(field, order);
   }
   
-  setEventListener(childrens = this.subElement.header.children) {
-    
-    for(const children of childrens) {
-      children.addEventListener('pointerdown',(event) => {
-        if (children.dataset.sortable) {
-          if (children.dataset.order === undefined || children.dataset.order === '') {
-            children.dataset.order = 'asc';
-          }
-          if (children.dataset.order === 'asc') {
-            children.dataset.order = 'desc'
-          } else {  children.dataset.order = 'asc'}
-  
-          this.sort(children.dataset.id,children.dataset.order);
-          
-        }
-    })
-    }
-    
-    
+  setEventListener() {
+    this.subElement.header.addEventListener('pointerdown', this.onSortClick)
   }
   
   
@@ -157,6 +170,8 @@ export default class SortableTable {
           return direction * (a[field] - b[field]);
         case 'string' :
           return direction * a[field].localeCompare(b[field], ['ru' , 'en']);
+        case 'custom' :
+          return direction * customSorting(a,b);
         default :
           throw new Error (`Unknown type ${sortType}`);   
       }
@@ -176,3 +191,5 @@ export default class SortableTable {
     }
   }
   
+  
+
