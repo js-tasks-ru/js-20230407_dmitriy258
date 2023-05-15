@@ -54,7 +54,7 @@ export default class ProductForm {
           }});
 
           let result = await response.json();
-          console.log(result);
+          
           this.data.productData[0].images.push({
             url: `${result.data.link}`,
             sourse: `${result.data.id}`
@@ -85,7 +85,7 @@ export default class ProductForm {
      const data = await this.loadData(this.productId);
 
       this.data = data;
-      console.log(this.data);
+      
       this.show();
     
     }
@@ -143,7 +143,7 @@ export default class ProductForm {
     }
 
     getImage(data) {
-      console.log(data);
+      
       return data.productData[0].images.map(item => {
         return `<li class="products-edit__imagelist-item sortable-list__item" style="">
       <input type="hidden" name="url" value="${item.url}">
@@ -174,12 +174,12 @@ export default class ProductForm {
     
         result[name] = subElem;
       }
-      console.log(result);
+      
       return result;
     }
 
   getTemplate(data) {
-    console.log(data);
+    
     const {productData, categoryData} = data; 
     
       return `<div class="product-form">
